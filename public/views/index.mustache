@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />
+    <link rel="stylesheet" href="css/skelton/normalize.css">
+    <link rel="stylesheet" href="css/skelton/skeleton.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" id="FontAwesome-css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css?ver=6.1.1" type="text/css" media="all">
+    <script type = "text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <title>Hello World!</title>
+</head>
+
+<body>
+  <!-- Background image -->
+  <div class="hero-data-bg" style="height: 400px;">
+    <div class="heroWrapper">
+      <h1 class="hero-heading">Visio Metrics</h1>
+
+      <p class="searchExisting">
+        <p>Select Duration </p>
+        <p> <i class="fa fa-clock"> </i> <input class="text-black" type="month" name="monthYear" id="yearMonthExisitng"></p>
+        <p><button id="fetchExistingData" style="color:white !important;"><i class="fa fa-chart-pie"></i> Visualize</button></p>
+      </p>
+    </div>
+  </div>
+  <!-- Background image -->
+  <form action="/dashboard/uploadIterationDetails" method="post" enctype="multipart/form-data">
+    <div class="row">
+      <div class="wrapper">
+        <div class="file-upload">
+          <div class="form-wrapper">
+            <input type="file" name="iterationDataFile" />
+            <i class="fa fa-arrow-up"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="RightPanel">
+      <input type="month" name="monthYear" id="monthYear">
+      <input type="text" name="Iteration" id="Iteration">
+      <input type="submit" value="Get me the stats!" class="btn btn-default">
+    </div>
+  </form>
+  <script>
+$(document).ready(function(){
+  var fetchExistingDataButton = document.getElementById('fetchExistingData');
+    fetchExistingDataButton.addEventListener('click',function(){
+      alert('fetching Exisitng Data - Started');
+      var yearMonth=document.getElementById('yearMonthExisitng');
+      var yearMonthValue=yearMonth.value;
+      console.log($('#yearMonthExisitng').val());
+      fetch('http://localhost:8888/dashboard/iterationData/'+yearMonthValue,{ 
+        method:'get', 
+        headers: new Headers({ 'Content-Type':'application/json' }) 
+      })
+        .then(res=>(res.json())) 
+        .then(data=>{
+          console.log(data);
+          if(data.data[0].iterationDetails.length && data.data[0].iterationDetails.length>0){
+            window.location.href = "http://localhost:8888/dashboard/display/"+data.data[0].monthYear;
+          }
+        })
+    });
+});
+  </script>
+</body>
+</html>
